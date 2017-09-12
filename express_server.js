@@ -19,6 +19,10 @@ app
     extended: true
   }))
 
+  .get('/u/:shortURL', (req, res) => {
+    res.redirect(longURL);
+  })
+
   .get('/urls/new', (req, res) => {
     res.render('urls_new');
   })
