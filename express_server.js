@@ -10,6 +10,10 @@ let urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+function generateRandomString() {
+  return Math.random().toString(36).substr(2,6);
+}
+
 app
   .use(bodyParser.urlencoded( {
     extended: true
