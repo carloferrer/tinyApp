@@ -38,9 +38,11 @@ app
   })
 
   .post('/urls/:id/delete', (req, res) => {
-    res.render('test'); // render test page
     delete urlDatabase[req.params.id];
-    console.log("DELETE STUFF");
+    templateVars = {
+      urls: urlDatabase
+    };
+    res.render('urls_index', templateVars);
   })
 
   .get('/urls/new', (req, res) => {
