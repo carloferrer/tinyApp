@@ -11,5 +11,9 @@
   <ul>
       <li><%= shortURL%>: <%= urls[shortURL]%></li>
   </ul>
+
+  <form method="POST" action=<%= '/urls/' + url + '/delete'%>>
+    <input type='submit' value='DELETE' />
+  </form>
 </body>
 </html>
