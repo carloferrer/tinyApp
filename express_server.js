@@ -1,13 +1,29 @@
-var express = require('express');
-var app = express();
-var PORT = process.env.PORT || 8080;
+const express = require('express');
+const app = express();
 
-var urlDatabase = {
+const bodyParser = require('body-parser');
+
+const PORT = process.env.PORT || 8080;
+
+let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
 app
+  .use(bodyParser.urlencoded( {
+    extended: true
+  }))
+
+  .get('/urls/new', (req, res) => {
+    res.render('urls_new');
+  })
+
+  .post('/urls', (req, res) => {
+    console.log(req.body); // debug statement to see POST parameters
+    res.send('OK'); // respond w/ OK (to be replaced)
+  })
+
   .get('/urls', (req, res) => {
     let templateVars = {
       urls: urlDatabase
