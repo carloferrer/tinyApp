@@ -10,6 +10,8 @@ let urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+let templateVars = {};
+
 function generateRandomString() {
   return Math.random().toString(36).substr(2,6);
 }
@@ -20,6 +22,7 @@ app
   }))
 
   .get('/u/:shortURL', (req, res) => {
+    let longURL = urlDatabase[req.params.shortURL];
     res.redirect(longURL);
   })
 
@@ -33,7 +36,7 @@ app
   })
 
   .get('/urls', (req, res) => {
-    let templateVars = {
+    templateVars = {
       urls: urlDatabase
     };
     res.render('urls_index', templateVars);
