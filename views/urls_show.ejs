@@ -8,15 +8,11 @@
     <% include ../partials/_header %>
   </header>
 
-  <ul>
-      <li><%= shortURL%>: <%= urls[shortURL]%></li>
-  </ul>
-
-  <form method="POST" action=<%= '/urls/' + urls[shortURL] + '/update'%>>
-    Input full URL to update its short URL...
+  <form method="POST" action=<%= '/urls/' + shortURL + '/update'%>>
+    ShortURL: <%= shortURL%>
     <br>
-      <input type='text' value='<input URL here>' />
-      <input type='submit' value='UPDATE' />
+      <input type='text' name='inputURL'/>
+      <input type='submit' value='UPDATE'/>
   </form>
 </body>
 </html>

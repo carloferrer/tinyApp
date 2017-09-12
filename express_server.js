@@ -26,7 +26,6 @@ function generateRandomString() {
   return text;
 }
 
-
 app
   .use(bodyParser.urlencoded( {
     extended: true
@@ -38,7 +37,14 @@ app
   })
 
   .post('/urls/:id/update', (req, res) => {
+    urlDatabase[req.params.id] = req.body.inputURL;
 
+    templateVars = {
+      urls: urlDatabase,
+      shortURL: req.params.id
+    };
+
+    res.render('urls_show', templateVars);
   })
 
   .post('/urls/:id/delete', (req, res) => {
