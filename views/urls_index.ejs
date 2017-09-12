@@ -10,7 +10,9 @@
 
   <ul>
     <% for (var url in urls) { %>
-      <li><%= url%>: <%= urls[url] %></li>
+      <li>
+        <%= url%>: <%= urls[url] %> <form method="POST" action="/urls/9sm5xK/delete">...</form><input type='submit' value='DELETE'>
+      </li>
     <% } %>
   </ul>
   <a href="">Click here to shorten a URL!</a>

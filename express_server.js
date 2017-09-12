@@ -13,7 +13,17 @@ let urlDatabase = {
 let templateVars = {};
 
 function generateRandomString() {
-  return Math.random().toString(36).substr(2,6);
+  // the following is a very simple/elegant solution, however, it lacks the ability to generate capital letters
+  // return Math.random().toString(36).substr(2,6);
+
+  const LENGTH = 6;
+
+  let text = "";
+  const POSSIBLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for(var i = 0; i < LENGTH; i++) {
+      text += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.LENGTH));
+  }
+  return text;
 }
 
 app
@@ -26,6 +36,7 @@ app
     res.redirect(longURL);
   })
 
+// *** *** ***
   .get('/urls/new', (req, res) => {
     res.render('urls_new');
   })
@@ -34,6 +45,7 @@ app
     console.log(req.body); // debug statement to see POST parameters
     res.send('OK'); // respond w/ OK (to be replaced)
   })
+// *** *** ***
 
   .get('/urls', (req, res) => {
     templateVars = {
