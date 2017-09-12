@@ -12,8 +12,11 @@
       <li><%= shortURL%>: <%= urls[shortURL]%></li>
   </ul>
 
-  <form method="POST" action=<%= '/urls/' + url + '/delete'%>>
-    <input type='submit' value='DELETE' />
+  <form method="POST" action=<%= '/urls/' + urls[shortURL] + '/update'%>>
+    Input full URL to update its short URL...
+    <br>
+      <input type='text' value='<input URL here>' />
+      <input type='submit' value='UPDATE' />
   </form>
 </body>
 </html>
