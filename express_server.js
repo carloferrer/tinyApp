@@ -26,6 +26,7 @@ function generateRandomString() {
   return text;
 }
 
+
 app
   .use(bodyParser.urlencoded( {
     extended: true
@@ -36,7 +37,12 @@ app
     res.redirect(longURL);
   })
 
-// *** *** ***
+  .post('/urls/:id/delete', (req, res) => {
+    res.render('test'); // render test page
+    delete urlDatabase[req.params.id];
+    console.log("DELETE STUFF");
+  })
+
   .get('/urls/new', (req, res) => {
     res.render('urls_new');
   })
@@ -45,7 +51,6 @@ app
     console.log(req.body); // debug statement to see POST parameters
     res.send('OK'); // respond w/ OK (to be replaced)
   })
-// *** *** ***
 
   .get('/urls', (req, res) => {
     templateVars = {
