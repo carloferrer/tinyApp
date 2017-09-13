@@ -30,13 +30,14 @@ function generateRandomString() {
   // the following is a very simple/elegant solution, however, it lacks the ability to generate capital letters
   // return Math.random().toString(36).substr(2,6);
 
-  const LENGTH = 6;
-  const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let text = "";
 
-  for(var i = 0; i < LENGTH; i++) {
-      text += CHARS.charAt(Math.floor(Math.random() * CHARS.LENGTH));
+  for(var i = 0; i < 6; i++) {
+      text += chars.charAt(Math.floor(Math.random() * chars.length));
   }
+
+
   return text;
 }
 
@@ -55,6 +56,11 @@ app
       'email': req.body.email,
       'password': req.body.password
     };
+
+    console.log(newUserID, req.body.email, req.body.password);
+
+    res.cookie('userID', newUserID);
+    res.redirect('/urls');
   })
 
   .get('/register', (req, res) => {
