@@ -84,9 +84,9 @@ app
   })
 
   .post('/logout', (req, res) => {
-    // res.clearCookie('username');
+    res.clearCookie('userID');
 
-    // res.redirect('/urls');
+    res.redirect('/urls');
   })
 
   .post('/login', (req, res) => {
