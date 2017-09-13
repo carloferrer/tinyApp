@@ -40,7 +40,7 @@ app
 
     templateVars = {
       urls: urlDatabase,
-      username: req.cookies['username']
+      username: username
     };
 
     res.render('urls_index', templateVars);
