@@ -213,8 +213,16 @@ app
 
 // ***** ***** ***** ***** *****
   .post('/urls', (req, res) => {
-    console.log(req.body); // debug statement to see POST parameters
-    res.send('OK'); // respond w/ OK (to be replaced)
+    urlDatabase[generateRandomString()] = req.body.longURL;
+
+    templateVars = {
+      urls: urlDatabase,
+      // users: users,
+      loggedAs: loggedAs
+    };
+    res.render('urls_index', templateVars);
+    // console.log(req.body); // debug statement to see POST parameters
+    // res.send('OK'); // respond w/ OK (to be replaced)
   })
 
   .set('view engine', 'ejs')
