@@ -37,6 +37,8 @@ function generateRandomString() {
   return text;
 }
 
+let loggedAs = '';
+
 app
   .use(bodyParser.urlencoded( {
     extended: true
@@ -85,28 +87,25 @@ app
 
   .post('/logout', (req, res) => {
     res.clearCookie('userID');
-
+    loggedAs = '';
     res.redirect('/urls');
   })
 
   .post('/login', (req, res) => {
-    let proceed = true;
+    let proceed = false;
     let emailFound = false;
-    // if (!req.body.email) {
-    //   res.status(403).send('Email field empty.');
-    //   console.log("Email field empty.");
-    //   proceed = false;
-    // }
 
     for (let currentUser in users) {
       if (users[currentUser]['email'] === req.body.email) {
         emailFound = true;
         if (users[currentUser]['password'] === req.body.password) {
+          proceed = true;
           console.log("You've logged in as: ", users[currentUser]['id']);
+          loggedAs = users[currentUser]['id'];
           res.cookie('userID', users[currentUser]['id']);
         } else {
           res.status(403).send('Password incorrect.');
-          proceed = false;
+
         }
       }
     }
@@ -116,17 +115,10 @@ app
     }
 
     if (proceed) {
-      res.redirect('/');
+      res.redirect('/urls');
+      // res.send('You logged in!');
     }
-    // let username = req.body.username;
-    // res.cookie('username',username);
 
-    // templateVars = {
-    //   urls: urlDatabase,
-    //   users: users
-    // };
-
-    // res.render('urls_index', templateVars);
   })
 
   .get('/u/:shortURL', (req, res) => {
@@ -139,7 +131,8 @@ app
 
     templateVars = {
       urls: urlDatabase,
-      users: users
+      users: users,
+      loggedAs: loggedAs
     };
 
     res.render('urls_index', templateVars);
@@ -149,7 +142,8 @@ app
     delete urlDatabase[req.params.id];
     templateVars = {
       urls: urlDatabase,
-      users: users
+      users: users,
+      loggedAs: loggedAs
     };
     res.render('urls_index', templateVars);
   })
@@ -166,7 +160,8 @@ app
   .get('/urls', (req, res) => {
     templateVars = {
       urls: urlDatabase,
-      users: users
+      users: users,
+      loggedAs: loggedAs
     };
     res.render('urls_index', templateVars);
   })
@@ -175,7 +170,8 @@ app
     templateVars = {
       urls: urlDatabase,
       shortURL: req.params.id,
-      users: users
+      users: users,
+      loggedAs: loggedAs
     };
     res.render('urls_show', templateVars);
   })
