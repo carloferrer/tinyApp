@@ -17,11 +17,11 @@ function generateRandomString() {
   // return Math.random().toString(36).substr(2,6);
 
   const LENGTH = 6;
-
+  const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let text = "";
-  const POSSIBLE = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
   for(var i = 0; i < LENGTH; i++) {
-      text += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.LENGTH));
+      text += CHARS.charAt(Math.floor(Math.random() * CHARS.LENGTH));
   }
   return text;
 }
