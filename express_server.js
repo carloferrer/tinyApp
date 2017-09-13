@@ -90,6 +90,34 @@ app
   })
 
   .post('/login', (req, res) => {
+    let proceed = true;
+    let emailFound = false;
+    // if (!req.body.email) {
+    //   res.status(403).send('Email field empty.');
+    //   console.log("Email field empty.");
+    //   proceed = false;
+    // }
+
+    for (let currentUser in users) {
+      if (users[currentUser]['email'] === req.body.email) {
+        emailFound = true;
+        if (users[currentUser]['password'] === req.body.password) {
+          console.log("You've logged in as: ", users[currentUser]['id']);
+          res.cookie('userID', users[currentUser]['id']);
+        } else {
+          res.status(403).send('Password incorrect.');
+          proceed = false;
+        }
+      }
+    }
+
+    if (!emailFound) {
+      res.status(403).send('Email not found');
+    }
+
+    if (proceed) {
+      res.redirect('/');
+    }
     // let username = req.body.username;
     // res.cookie('username',username);
 
