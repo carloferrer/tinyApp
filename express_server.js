@@ -34,8 +34,9 @@ app
 
   .use(cookieParser())
 
-  .post('/urls/login', (req, res) => {
-
+  .post('/login', (req, res) => {
+    let username = req.body.username;
+    res.cookie('username',username);
   })
 
   .get('/u/:shortURL', (req, res) => {
