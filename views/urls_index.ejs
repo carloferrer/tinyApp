@@ -8,6 +8,7 @@
     <% include ../partials/_header %>
   </header>
 
+<% if(loggedAs) { %>
   <ul>
     <% for (var url in urls) { %>
       <li>
@@ -19,5 +20,6 @@
     <% } %>
   </ul>
   <a href="">Click here to shorten a URL!</a>
+<% } %>
 </body>
 </html>
