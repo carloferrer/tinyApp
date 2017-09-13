@@ -45,10 +45,13 @@ app
   .use(cookieParser())
 
   .post('/register', (req, res) => {
+    let proceed = true;
+
     if (!req.body.email) {
       res.statusCode = 400;
       res.send('Email field empty.');
       console.log("Email field empty.");
+      proceed = false;
     }
 
     for (let currentUser in users) {
@@ -56,19 +59,22 @@ app
         res.statusCode = 400;
         res.send('Email already registered.');
         console.log("Email already registered.");
+        proceed = false;
       }
     }
 
-    // let newUserID = generateRandomString();
+    if (proceed) {
+      let newUserID = generateRandomString();
 
-    // users[newUserID] = {
-    //   'id': newUserID,
-    //   'email': req.body.email,
-    //   'password': req.body.password
-    // };
+      users[newUserID] = {
+        'id': newUserID,
+        'email': req.body.email,
+        'password': req.body.password
+      };
 
-    // res.cookie('userID', newUserID);
-    // res.redirect('/urls');
+      res.cookie('userID', newUserID);
+      res.redirect('/urls');
+    }
   })
 
   .get('/register', (req, res) => {
