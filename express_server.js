@@ -27,16 +27,12 @@ let urlDatabase = {
 let templateVars = {};
 
 function generateRandomString() {
-  // the following is a very simple/elegant solution, however, it lacks the ability to generate capital letters
-  // return Math.random().toString(36).substr(2,6);
-
   let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let text = "";
 
   for(var i = 0; i < 6; i++) {
       text += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-
 
   return text;
 }
@@ -49,18 +45,30 @@ app
   .use(cookieParser())
 
   .post('/register', (req, res) => {
-    let newUserID = generateRandomString();
+    if (!req.body.email) {
+      res.statusCode = 400;
+      res.send('Email field empty.');
+      console.log("Email field empty.");
+    }
 
-    users[newUserID] = {
-      'id': newUserID,
-      'email': req.body.email,
-      'password': req.body.password
-    };
+    for (let currentUser in users) {
+      if (users[currentUser]['email'] === req.body.email) {
+        res.statusCode = 400;
+        res.send('Email already registered.');
+        console.log("Email already registered.");
+      }
+    }
 
-    console.log(newUserID, req.body.email, req.body.password);
+    // let newUserID = generateRandomString();
 
-    res.cookie('userID', newUserID);
-    res.redirect('/urls');
+    // users[newUserID] = {
+    //   'id': newUserID,
+    //   'email': req.body.email,
+    //   'password': req.body.password
+    // };
+
+    // res.cookie('userID', newUserID);
+    // res.redirect('/urls');
   })
 
   .get('/register', (req, res) => {
