@@ -79,6 +79,10 @@ app
     res.render('urls_register');
   })
 
+  .get('/login', (req, res) => {
+    res.render('urls_login');
+  })
+
   .post('/logout', (req, res) => {
     // res.clearCookie('username');
 
