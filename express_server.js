@@ -21,13 +21,23 @@ const users = {
     id: "ADMINISTRATOR",
     email: "a@a",
     password: "a"
+  },
+  "b": {
+    id: "ADMINISTRATOR-2",
+    email: "b@b",
+    password: "b"
   }
+
 };
 
 let urlDatabase = {
   'ADMINISTRATOR' : {
     "b2xVn2": "http://www.lighthouselabs.ca",
     "9sm5xK": "http://www.google.com"
+  },
+  'ADMINISTRATOR-2' : {
+    "a2a2a2": "http://www.facebook.com",
+    "b3b3b3": "http://www.reddit.com"
   }
 };
 
@@ -152,6 +162,7 @@ app
 // UPDATE A SHORT URL
 // ***** ***** ***** ***** *****
   .get('/urls/:id/update', (req, res) => {
+
     templateVars = {
       urls: uniqueURLs,
       shortURL: req.params.id,
