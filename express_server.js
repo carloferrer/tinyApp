@@ -162,18 +162,33 @@ app
 // UPDATE A SHORT URL
 // ***** ***** ***** ***** *****
   .get('/urls/:id/update', (req, res) => {
+    let proceed = true;
+    // authenticate();
+
+    if (!uniqueURLs[req.params.id]) {
+      proceed = false;
+      res.status(403).send('You cannot update a shortURL that: \n1. you do not own, or \n2.does not exist.');
+    }
 
     templateVars = {
       urls: uniqueURLs,
       shortURL: req.params.id,
       loggedAs: loggedAs
     };
+
     console.log('Attempting to update ' + templateVars['shortURL']);
-    res.render('urls_show', templateVars);
+    if (proceed) {
+      res.render('urls_show', templateVars);
+    }
   })
 
   .post('/urls/:id/update', (req, res) => {
-    uniqueURLs[req.params.id] = req.body.inputURL;
+    authenticate();
+    if (!uniqueURLs[req.params.id]) {
+      res.status(403).send('You cannot update a shortURL that: \n1. you do not own, or \n2.does not exist.');
+    } else {
+      uniqueURLs[req.params.id] = req.body.inputURL;
+    }
 
     templateVars = {
       urls: uniqueURLs,
@@ -188,13 +203,23 @@ app
 // DELETE A URL
 // ***** ***** ***** ***** *****
   .post('/urls/:id/delete', (req, res) => {
+    let proceed = true;
+
+    if (!uniqueURLs[req.params.id]) {
+      res.status(403).send('You cannot delete a shortURL that: \n1. you do not own, or \n2.does not exist.');
+      proceed = false;
+    }
+
     delete uniqueURLs[req.params.id];
     templateVars = {
       urls: uniqueURLs,
       // users: users,
       loggedAs: loggedAs
     };
-    res.render('urls_index', templateVars);
+
+    if (proceed) {
+      res.render('urls_index', templateVars);
+    }
   })
 // ***** ***** ***** ***** *****
 
@@ -220,13 +245,22 @@ app
 // ***** ***** ***** ***** *****
 
   .get('/urls/:id', (req, res) => {
+    let proceed = true;
+
+    if (!uniqueURLs[req.params.id]) {
+      res.status(403).send('You cannot update a shortURL that: \n1. you do not own, or \n2.does not exist.');
+      proceed = false;
+    }
+
     templateVars = {
       urls: uniqueURLs,
       shortURL: req.params.id,
       // users: users,
       loggedAs: loggedAs
     };
-    res.render('urls_show', templateVars);
+    if (proceed) {
+      res.render('urls_show', templateVars);
+    }
   })
 
 // ***** ***** ***** ***** *****
@@ -249,6 +283,16 @@ app
     console.log(`Example app listening on port ${PORT}!`);
   });
 // ***** ***** ***** ***** *****
+
+function authenticate() {
+  // for (let uniqueUser in urlDatabase) {
+  //   for (let short in urlDatabase[uniqueUser]) {
+  //     if (loggedAs !== uniqueUser) {
+  //       res.status(403).send('You are not the owner of this shortURL.  You may only manipulate this shortURL if you are the owner.')
+  //     }
+  //   }
+  // }
+}
 
 // RANDOM ID GENERATOR
 // ***** ***** ***** ***** *****
