@@ -41,10 +41,9 @@ app
 
     templateVars = {
       urls: urlDatabase,
-      shortURL: req.params.id
     };
 
-    res.render('urls_show', templateVars);
+    res.render('urls_index', templateVars);
   })
 
   .post('/urls/:id/delete', (req, res) => {
