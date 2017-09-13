@@ -109,11 +109,15 @@ app
         if (users[currentUser]['password'] === req.body.password) {
           proceed = true;
           console.log("You've logged in as: ", users[currentUser]['id']);
+          // loggedAs = users[currentUser]['id'];
+
+          // uniqueURLs = urlDatabase[loggedAs];
+
+          res.cookie('userID', users[currentUser]['id']);
           loggedAs = users[currentUser]['id'];
 
           uniqueURLs = urlDatabase[loggedAs];
-
-          res.cookie('userID', users[currentUser]['id']);
+          console.log(req.cookies);
         } else {
           res.status(403).send('Password incorrect.');
         }
@@ -146,6 +150,8 @@ app
 // ***** ***** ***** ***** *****
   .post('/logout', (req, res) => {
     res.clearCookie('userID');
+
+    console.log('Logged out. Cookie cleared. ');
     loggedAs = '';
     res.redirect('/urls');
   })
