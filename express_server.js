@@ -34,6 +34,19 @@ app
 
   .use(cookieParser())
 
+  .post('/logout', (req, res) => {
+    res.clearCookie('username');
+
+    // templateVars = {
+    //   urls: urlDatabase,
+    //   username: req.cookies['username']
+    // };
+
+    // res.render('urls_index', templateVars);
+
+    res.redirect('/urls');
+  })
+
   .post('/login', (req, res) => {
     let username = req.body.username;
     res.cookie('username',username);
