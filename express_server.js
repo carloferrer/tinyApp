@@ -48,16 +48,14 @@ app
     let proceed = true;
 
     if (!req.body.email) {
-      res.statusCode = 400;
-      res.send('Email field empty.');
+      res.status(400).send('Email field empty.');
       console.log("Email field empty.");
       proceed = false;
     }
 
     for (let currentUser in users) {
       if (users[currentUser]['email'] === req.body.email) {
-        res.statusCode = 400;
-        res.send('Email already registered.');
+        res.status(400).send('Email already registered.');
         console.log("Email already registered.");
         proceed = false;
       }
