@@ -154,7 +154,18 @@ app
 // REDIRECT FROM SHORT URL TO LONG URL
 // ***** ***** ***** ***** *****
   .get('/u/:shortURL', (req, res) => {
-    let longURL = uniqueURLs[req.params.shortURL];
+    let longURL = '';
+
+    for (let uniqueUser in urlDatabase) {
+      // console.log(u);
+      // console.log(url[u]);
+      for (let short in urlDatabase[uniqueUser]) {
+        if (req.params.shortURL === short) {
+          longURL = urlDatabase[uniqueUser][short];
+        }
+      }
+    }
+    console.log(longURL);
     res.redirect(longURL);
   })
 // ***** ***** ***** ***** *****
