@@ -73,7 +73,12 @@ app
   })
 
   .get('/register', (req, res) => {
-    res.render('urls_register');
+    templateVars = {
+      urls: urlDatabase,
+      // users: users,
+      loggedAs: loggedAs
+    };
+    res.render('urls_register', templateVars);
   })
 // ***** ***** ***** ***** *****
 
@@ -110,7 +115,13 @@ app
   })
 
   .get('/login', (req, res) => {
-    res.render('urls_login');
+    templateVars = {
+      urls: urlDatabase,
+      // users: users,
+      loggedAs: loggedAs
+    };
+
+    res.render('urls_login', templateVars);
   })
 // ***** ***** ***** ***** *****
 
@@ -133,6 +144,16 @@ app
 
 // UPDATE A SHORT URL
 // ***** ***** ***** ***** *****
+  .get('/urls/:id/update', (req, res) => {
+    templateVars = {
+      urls: urlDatabase,
+      shortURL: req.params.id,
+      loggedAs: loggedAs
+    };
+    console.log('Attempting to update ' + templateVars['shortURL']);
+    res.render('urls_show', templateVars);
+  })
+
   .post('/urls/:id/update', (req, res) => {
     urlDatabase[req.params.id] = req.body.inputURL;
 

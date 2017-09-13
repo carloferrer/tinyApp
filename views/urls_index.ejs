@@ -3,24 +3,32 @@
 <head>
   <title>TinyApp</title>
 </head>
-<body>
+<body style="font-size:20px; padding:50px;">
   <header>
     <% include ../partials/_header %>
   </header>
 
 <% if(loggedAs) { %>
+  <br>
+  <form method='GET' action='/urls/new'>
+    <input type='submit' value='CLICK TO GENERATE SHORT URL'>
+  </form>
+
   <h2>Pre-existing Links w/ ShortURLs</h2>
   <ul>
     <% for (var url in urls) { %>
       <li>
         <%= url%>: <%= urls[url] %>
-          <form method="POST" action=<%= '/urls/' + url + '/delete'%>>
+          <form method='GET' action=<%= '/urls/' + url + '/update'%>>
+            <input type='submit' value='UPDATE' />
+          </form>
+          <form method='POST' action=<%= '/urls/' + url + '/delete'%>>
             <input type='submit' value='DELETE' />
           </form>
       </li>
+      <br>
     <% } %>
   </ul>
-  <a href="">Click here to shorten a URL!</a>
 <% } %>
 </body>
 </html>
