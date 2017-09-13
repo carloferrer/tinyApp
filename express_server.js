@@ -25,18 +25,6 @@ let urlDatabase = {
 };
 
 let templateVars = {};
-
-function generateRandomString() {
-  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let text = "";
-
-  for(var i = 0; i < 6; i++) {
-      text += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-
-  return text;
-}
-
 let loggedAs = '';
 
 app
@@ -46,6 +34,8 @@ app
 
   .use(cookieParser())
 
+// REGISTER
+// ***** ***** ***** ***** *****
   .post('/register', (req, res) => {
     let proceed = true;
 
@@ -80,17 +70,11 @@ app
   .get('/register', (req, res) => {
     res.render('urls_register');
   })
+// ***** ***** ***** ***** *****
 
-  .get('/login', (req, res) => {
-    res.render('urls_login');
-  })
 
-  .post('/logout', (req, res) => {
-    res.clearCookie('userID');
-    loggedAs = '';
-    res.redirect('/urls');
-  })
-
+// LOG IN
+// ***** ***** ***** ***** *****
   .post('/login', (req, res) => {
     let proceed = false;
     let emailFound = false;
@@ -105,7 +89,6 @@ app
           res.cookie('userID', users[currentUser]['id']);
         } else {
           res.status(403).send('Password incorrect.');
-
         }
       }
     }
@@ -121,46 +104,64 @@ app
 
   })
 
+  .get('/login', (req, res) => {
+    res.render('urls_login');
+  })
+// ***** ***** ***** ***** *****
+
+// LOGOUT
+// ***** ***** ***** ***** *****
+  .post('/logout', (req, res) => {
+    res.clearCookie('userID');
+    loggedAs = '';
+    res.redirect('/urls');
+  })
+// ***** ***** ***** ***** *****
+
+// REDIRECT FROM SHORT URL TO LONG URL
+// ***** ***** ***** ***** *****
   .get('/u/:shortURL', (req, res) => {
     let longURL = urlDatabase[req.params.shortURL];
     res.redirect(longURL);
   })
+// ***** ***** ***** ***** *****
 
+// UPDATE A SHORT URL
+// ***** ***** ***** ***** *****
   .post('/urls/:id/update', (req, res) => {
     urlDatabase[req.params.id] = req.body.inputURL;
 
     templateVars = {
       urls: urlDatabase,
-      users: users,
+      // users: users,
       loggedAs: loggedAs
     };
 
     res.render('urls_index', templateVars);
   })
+// ***** ***** ***** ***** *****
 
+// DELETE A URL
+// ***** ***** ***** ***** *****
   .post('/urls/:id/delete', (req, res) => {
     delete urlDatabase[req.params.id];
     templateVars = {
       urls: urlDatabase,
-      users: users,
+      // users: users,
       loggedAs: loggedAs
     };
     res.render('urls_index', templateVars);
   })
+// ***** ***** ***** ***** *****
 
   .get('/urls/new', (req, res) => {
     res.render('urls_new');
   })
 
-  .post('/urls', (req, res) => {
-    console.log(req.body); // debug statement to see POST parameters
-    res.send('OK'); // respond w/ OK (to be replaced)
-  })
-
   .get('/urls', (req, res) => {
     templateVars = {
       urls: urlDatabase,
-      users: users,
+      // users: users,
       loggedAs: loggedAs
     };
     res.render('urls_index', templateVars);
@@ -170,10 +171,16 @@ app
     templateVars = {
       urls: urlDatabase,
       shortURL: req.params.id,
-      users: users,
+      // users: users,
       loggedAs: loggedAs
     };
     res.render('urls_show', templateVars);
+  })
+
+// ***** ***** ***** ***** *****
+  .post('/urls', (req, res) => {
+    console.log(req.body); // debug statement to see POST parameters
+    res.send('OK'); // respond w/ OK (to be replaced)
   })
 
   .set('view engine', 'ejs')
@@ -181,3 +188,17 @@ app
   .listen(PORT, () => {
     console.log(`Example app listening on port ${PORT}!`);
   });
+// ***** ***** ***** ***** *****
+
+// RANDOM ID GENERATOR
+// ***** ***** ***** ***** *****
+function generateRandomString() {
+  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let text = "";
+
+  for(var i = 0; i < 6; i++) {
+      text += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return text;
+}
+// ***** ***** ***** ***** *****
