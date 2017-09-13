@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT || 8080;
 
@@ -30,6 +31,8 @@ app
   .use(bodyParser.urlencoded( {
     extended: true
   }))
+
+  .use(cookieParser())
 
   .get('/u/:shortURL', (req, res) => {
     let longURL = urlDatabase[req.params.shortURL];
