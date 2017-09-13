@@ -1,7 +1,18 @@
 <h1>This is TinyApp.  Welcome to TinyApp.</h1>
 
-<form method="POST" action="/login">
-  Currently signed in as <%= username%>:
-  <input type='text' name='username' />
-  <input type='submit' value='SIGN IN' />
-</form>
+<% if (!username) { %>
+  <form method="POST" action="/login">
+    Please sign in:
+    <input type='text' name='username' />
+    <input type='submit' value='SIGN IN' />
+  </form>
+
+<% } else { %>
+  <form method="POST" action="/logout">
+    Currently signed in as <%= username%>:
+    <input type='submit' value='LOGOUT' />
+  </form>
+
+<% } %>
+
+
