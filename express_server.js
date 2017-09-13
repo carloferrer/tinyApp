@@ -37,6 +37,12 @@ app
   .post('/login', (req, res) => {
     let username = req.body.username;
     res.cookie('username',username);
+
+    templateVars = {
+      urls: urlDatabase,
+    };
+
+    res.render('urls_index', templateVars);
   })
 
   .get('/u/:shortURL', (req, res) => {
