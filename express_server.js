@@ -155,9 +155,16 @@ app
 // ***** ***** ***** ***** *****
 
   .get('/urls/new', (req, res) => {
-    res.render('urls_new');
+    templateVars = {
+      urls: urlDatabase,
+      // users: users,
+      loggedAs: loggedAs
+    };
+    res.render('urls_new', templateVars);
   })
 
+// LOAD INDEX PAGE
+// ***** ***** ***** ***** *****
   .get('/urls', (req, res) => {
     templateVars = {
       urls: urlDatabase,
@@ -166,6 +173,7 @@ app
     };
     res.render('urls_index', templateVars);
   })
+// ***** ***** ***** ***** *****
 
   .get('/urls/:id', (req, res) => {
     templateVars = {
