@@ -34,6 +34,10 @@ app
 
   .use(cookieParser())
 
+  .get('/register', (req, res) => {
+    res.render('urls_register');
+  })
+
   .post('/logout', (req, res) => {
     res.clearCookie('username');
 

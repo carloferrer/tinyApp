@@ -6,7 +6,10 @@
     <input type='text' name='username' />
     <input type='submit' value='SIGN IN' />
   </form>
-
+  <form method="GET" action="/register">
+    <br>
+    <input type='submit' value='OR, CLICK ME TO SIGN UP' />
+  </form>
 <% } else { %>
   <form method="POST" action="/logout">
     Currently signed in as <%= username%>:
