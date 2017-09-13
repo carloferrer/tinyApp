@@ -4,11 +4,14 @@
   <title>TinyApp</title>
 </head>
 <body>
-  <form method="POST" action=<%= '/urls/' + shortURL + '/update'%>>
-    ShortURL: <%= shortURL%>
+  <form method='POST' action='/register'>
+    Fill in the stuff below to register with TinyApp!
     <br>
-      <input type='text' name='inputURL'/>
-      <input type='submit' value='UPDATE'/>
+      Your email:
+      <input type='email' name='email'/>
+      Set a password:
+      <input type='password' name='password'/>
+      <input type='submit' name='SIGN UP'/>
   </form>
 </body>
 </html>
