@@ -7,16 +7,16 @@ const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 8080;
 
 const users = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur"
-  },
- "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: "dishwasher-funk"
-  },
+ //  "userRandomID": {
+ //    id: "userRandomID",
+ //    email: "user@example.com",
+ //    password: "purple-monkey-dinosaur"
+ //  },
+ // "user2RandomID": {
+ //    id: "user2RandomID",
+ //    email: "user2@example.com",
+ //    password: "dishwasher-funk"
+ //  },
   "a": {
     id: "ADMINISTRATOR",
     email: "a@a",
@@ -25,12 +25,15 @@ const users = {
 };
 
 let urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  'ADMINISTRATOR' : {
+    "b2xVn2": "http://www.lighthouselabs.ca",
+    "9sm5xK": "http://www.google.com"
+  }
 };
 
 let templateVars = {};
 let loggedAs = '';
+let uniqueURLs ={};
 
 app
   .use(bodyParser.urlencoded( {
@@ -67,6 +70,8 @@ app
         'password': req.body.password
       };
 
+      urlDatabase[newUserID] = {};
+
       res.cookie('userID', newUserID);
       res.redirect('/urls');
     }
@@ -74,7 +79,6 @@ app
 
   .get('/register', (req, res) => {
     templateVars = {
-      urls: urlDatabase,
       // users: users,
       loggedAs: loggedAs
     };
@@ -96,6 +100,9 @@ app
           proceed = true;
           console.log("You've logged in as: ", users[currentUser]['id']);
           loggedAs = users[currentUser]['id'];
+
+          uniqueURLs = urlDatabase[loggedAs];
+
           res.cookie('userID', users[currentUser]['id']);
         } else {
           res.status(403).send('Password incorrect.');
@@ -116,7 +123,7 @@ app
 
   .get('/login', (req, res) => {
     templateVars = {
-      urls: urlDatabase,
+      urls: uniqueURLs,
       // users: users,
       loggedAs: loggedAs
     };
@@ -137,7 +144,7 @@ app
 // REDIRECT FROM SHORT URL TO LONG URL
 // ***** ***** ***** ***** *****
   .get('/u/:shortURL', (req, res) => {
-    let longURL = urlDatabase[req.params.shortURL];
+    let longURL = uniqueURLs[req.params.shortURL];
     res.redirect(longURL);
   })
 // ***** ***** ***** ***** *****
@@ -146,7 +153,7 @@ app
 // ***** ***** ***** ***** *****
   .get('/urls/:id/update', (req, res) => {
     templateVars = {
-      urls: urlDatabase,
+      urls: uniqueURLs,
       shortURL: req.params.id,
       loggedAs: loggedAs
     };
@@ -155,10 +162,10 @@ app
   })
 
   .post('/urls/:id/update', (req, res) => {
-    urlDatabase[req.params.id] = req.body.inputURL;
+    uniqueURLs[req.params.id] = req.body.inputURL;
 
     templateVars = {
-      urls: urlDatabase,
+      urls: uniqueURLs,
       // users: users,
       loggedAs: loggedAs
     };
@@ -170,9 +177,9 @@ app
 // DELETE A URL
 // ***** ***** ***** ***** *****
   .post('/urls/:id/delete', (req, res) => {
-    delete urlDatabase[req.params.id];
+    delete uniqueURLs[req.params.id];
     templateVars = {
-      urls: urlDatabase,
+      urls: uniqueURLs,
       // users: users,
       loggedAs: loggedAs
     };
@@ -182,7 +189,7 @@ app
 
   .get('/urls/new', (req, res) => {
     templateVars = {
-      urls: urlDatabase,
+      urls: uniqueURLs,
       // users: users,
       loggedAs: loggedAs
     };
@@ -193,7 +200,7 @@ app
 // ***** ***** ***** ***** *****
   .get('/urls', (req, res) => {
     templateVars = {
-      urls: urlDatabase,
+      urls: uniqueURLs,
       // users: users,
       loggedAs: loggedAs
     };
@@ -203,7 +210,7 @@ app
 
   .get('/urls/:id', (req, res) => {
     templateVars = {
-      urls: urlDatabase,
+      urls: uniqueURLs,
       shortURL: req.params.id,
       // users: users,
       loggedAs: loggedAs
@@ -213,10 +220,10 @@ app
 
 // ***** ***** ***** ***** *****
   .post('/urls', (req, res) => {
-    urlDatabase[generateRandomString()] = req.body.longURL;
+    uniqueURLs[generateRandomString()] = req.body.longURL;
 
     templateVars = {
-      urls: urlDatabase,
+      urls: uniqueURLs,
       // users: users,
       loggedAs: loggedAs
     };
