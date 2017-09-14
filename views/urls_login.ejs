@@ -4,7 +4,7 @@
   <title>TinyApp</title>
 </head>
 <body style="font-size:16px; padding:30px;">
-  <% if(!loggedAsEmail) { %>
+
   <h1>Logging into TinyApp...</h1>
     <form method='POST' action='/login'>
         Your email:
@@ -15,8 +15,6 @@
         <br><br>
         <input type='submit' value='LOGIN'/>
     </form>
-  <% } else { %>
-    You're already logged in as <%= loggedAsEmail %>!
-  <% } %>
+
 </body>
 </html>

@@ -49,6 +49,11 @@ app
 // REGISTER
 // ***** ***** ***** ***** *****
   .get('/register', (req, res) => {
+    if (!loggedAsEmail) {
+      res.status(403).send('You are already logged in.  Please log out to register a new email!');
+      return;
+    }
+
     res.render('urls_register');
   })
 
@@ -84,7 +89,12 @@ app
 // LOG IN
 // ***** ***** ***** ***** *****
   .get('/login', (req, res) => {
-    res.render('urls_login', { loggedAsEmail : loggedAsEmail });
+    if (!loggedAsEmail) {
+      res.status(403).send('You are already logged in.  Please log out to log in!');
+      return;
+    }
+
+    res.render('urls_login');
   })
 
   .post('/login', (req, res) => {
