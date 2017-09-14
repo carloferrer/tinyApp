@@ -3,6 +3,7 @@ const app = express();
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 
 const PORT = process.env.PORT || 8080;
 
@@ -77,9 +78,10 @@ app
       users[newUserID] = {
         'id': newUserID,
         'email': req.body.email,
-        'password': req.body.password
+        'password': bcrypt.hashSync(req.body.password, 10)
       };
 
+      console.log(users[newUserID]['password']);
       urlDatabase[newUserID] = {};
 
       res.cookie('userID', newUserID);
@@ -106,7 +108,8 @@ app
     for (let currentUser in users) {
       if (users[currentUser]['email'] === req.body.email) {
         emailFound = true;
-        if (users[currentUser]['password'] === req.body.password) {
+        // if (users[currentUser]['password'] === req.body.password) {
+        if (bcrypt.compareSync(req.body.password, users[currentUser]['password'])) {
           proceed = true;
           console.log("You've logged in as: ", users[currentUser]['id']);
           // loggedAs = users[currentUser]['id'];
@@ -120,6 +123,7 @@ app
           console.log(req.cookies);
         } else {
           res.status(403).send('Password incorrect.');
+          console.log(bcrypt.compareSync(req.body.password, users[currentUser]['password']));
         }
       }
     }
