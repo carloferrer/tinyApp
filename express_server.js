@@ -2,22 +2,12 @@ const express = require('express');
 const app = express();
 
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 
 const PORT = process.env.PORT || 8080;
 
 const users = {
- //  "userRandomID": {
- //    id: "userRandomID",
- //    email: "user@example.com",
- //    password: "purple-monkey-dinosaur"
- //  },
- // "user2RandomID": {
- //    id: "user2RandomID",
- //    email: "user2@example.com",
- //    password: "dishwasher-funk"
- //  },
   "a": {
     id: "ADMINISTRATOR",
     email: "a@a",
@@ -51,7 +41,10 @@ app
     extended: true
   }))
 
-  .use(cookieParser())
+  .use(cookieSession({
+    name: 'session',
+    keys: 'this_is_my_key'
+  }))
 
 // REGISTER
 // ***** ***** ***** ***** *****
@@ -83,7 +76,7 @@ app
 
       urlDatabase[newUserID] = {};
 
-      res.cookie('userID', newUserID);
+      req.session.userID = newUserID;
       res.redirect('/urls');
     }
   })
@@ -119,7 +112,7 @@ app
           loggedAs = users[currentUser]['id'];
 
           uniqueURLs = urlDatabase[loggedAs];
-          console.log(req.cookies);
+          // console.log(req.cookies);
         } else {
           res.status(403).send('Password incorrect.');
         }
@@ -151,7 +144,8 @@ app
 // LOGOUT
 // ***** ***** ***** ***** *****
   .post('/logout', (req, res) => {
-    res.clearCookie('userID');
+    // res.clearCookie('userID');
+    req.session = null; // destroys session and clears cookies
 
     console.log('Logged out. Cookie cleared. ');
     loggedAs = '';
@@ -165,8 +159,6 @@ app
     let longURL = '';
 
     for (let uniqueUser in urlDatabase) {
-      // console.log(u);
-      // console.log(url[u]);
       for (let short in urlDatabase[uniqueUser]) {
         if (req.params.shortURL === short) {
           longURL = urlDatabase[uniqueUser][short];
