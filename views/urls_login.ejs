@@ -4,15 +4,18 @@
   <title>TinyApp</title>
 </head>
 <body style="font-size:20px; padding:50px;">
-
-  <form method='POST' action='/login'>
-      Your email:
-      <input type='email' name='email'/>
-      <br><br>
-      Your password:
-      <input type='password' name='password'/>
-      <br><br>
-      <input type='submit' value='LOGIN'/>
-  </form>
+  <% if(!loggedAsEmail) { %>
+    <form method='POST' action='/login'>
+        Your email:
+        <input type='email' name='email'/>
+        <br><br>
+        Your password:
+        <input type='password' name='password'/>
+        <br><br>
+        <input type='submit' value='LOGIN'/>
+    </form>
+  <% } else { %>
+    You're already logged in as <%= loggedAsEmail %>!
+  <% } %>
 </body>
 </html>

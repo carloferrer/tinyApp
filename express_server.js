@@ -83,6 +83,10 @@ app
 
 // LOG IN
 // ***** ***** ***** ***** *****
+  .get('/login', (req, res) => {
+    res.render('urls_login', { loggedAsEmail : loggedAsEmail });
+  })
+
   .post('/login', (req, res) => {
     let emailFound = false;
 
@@ -110,15 +114,6 @@ app
         return;
       }
     }
-  })
-
-  .get('/login', (req, res) => {
-    templateVars = {
-      urls: uniqueURLs,
-      loggedAsEmail: loggedAsEmail
-    };
-
-    res.render('urls_login', templateVars);
   })
 // ***** ***** ***** ***** *****
 
