@@ -89,26 +89,19 @@ app
 
   .post('/login', (req, res) => {
     for (let currentUser in users) {
-
       if (users[currentUser]['email'] === req.body.email) {
-
         if (bcrypt.compareSync(req.body.password, users[currentUser]['password'])) {
-
-          console.log("You've logged in as: ", users[currentUser]['email']);
 
           req.session.userID = users[currentUser]['id']; // Generate cookie.
           loggedAsEmail = users[currentUser]['email']; // Remember who's logged in.
           uniqueURLs = urlDatabase[users[currentUser]['id']]; // Only let this user see the URLs the user owns.
 
-          console.log(uniqueURLs);
           res.redirect('/urls');
           return;
 
         } else {
-
           res.status(403).send('Password is incorrect.');
           return;
-
         }
       }
     }
@@ -123,7 +116,7 @@ app
   .post('/logout', (req, res) => {
     req.session = null; // destroys session and clears cookies
 
-    console.log('Logged out. Cookie cleared. ');
+    console.log('Logged out. Cookie cleared.');
     loggedAsEmail = '';
     res.redirect('/urls');
   })
@@ -138,11 +131,12 @@ app
       for (let short in urlDatabase[uniqueUser]) {
         if (req.params.shortURL === short) {
           longURL = urlDatabase[uniqueUser][short];
+          res.redirect(longURL);
         }
       }
     }
 
-    res.redirect(longURL);
+    res.status(404).send('There is no URL associated with this shortURL!');
   })
 // ***** ***** ***** ***** *****
 
@@ -163,8 +157,11 @@ app
       loggedAsEmail: loggedAsEmail
     };
 
-    console.log('Attempting to update: ' + templateVars['shortURL']);
     res.render('urls_show', templateVars);
+  })
+
+  .get('/urls/:id', (req, res) => {
+    res.redirect(`/urls/${req.params.id}/update`);
   })
 
   .post('/urls/:id/update', (req, res) => {
@@ -239,25 +236,7 @@ app
     res.redirect('/urls');
   })
 
-// ***** ***** ***** ***** *****
-  .get('/urls/:id', (req, res) => {
-    if (!loggedAsEmail) {
-      res.status(403).send('You must be logged in to edit shortURLs!');
-      return;
-    } else if (!uniqueURLs[req.params.id]) {
-      res.status(403).send('You cannot edit shortURLs that you do not own!');
-      return;
-    }
-
-    templateVars = {
-      urls: uniqueURLs,
-      shortURL: req.params.id,
-      loggedAsEmail: loggedAsEmail
-    };
-
-    res.render('urls_show', templateVars);
-  })
-
+// APPEND
 // ***** ***** ***** ***** *****
   .set('view engine', 'ejs')
 
