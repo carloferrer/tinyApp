@@ -161,7 +161,16 @@ app
   })
 
   .get('/urls/:id', (req, res) => {
-    res.redirect(`/urls/${req.params.id}/update`);
+    if (req.params.id === 'new') {
+      templateVars = {
+        urls: uniqueURLs,
+        loggedAsEmail: loggedAsEmail
+      };
+
+      res.render('urls_new', templateVars);
+    } else {
+      res.redirect(`/urls/${req.params.id}/update`);
+    }
   })
 
   .post('/urls/:id/update', (req, res) => {
@@ -217,6 +226,11 @@ app
   })
 
   .post('/urls', (req, res) => {
+     if (!loggedAsEmail) {
+      res.status(403).send('You must be logged in to generate shortURLs!');
+      return;
+    }
+
     uniqueURLs[generateRandomString()] = req.body.longURL;
     res.redirect('/urls');
   })
