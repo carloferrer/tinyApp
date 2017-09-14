@@ -52,7 +52,7 @@ app
 
   .use(methodOverride('_method'))
 
-  .use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+  .use(morgan('tiny'))
 
 // REGISTER
 // ***** ***** ***** ***** *****
