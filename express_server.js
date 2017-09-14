@@ -49,7 +49,7 @@ app
 // REGISTER
 // ***** ***** ***** ***** *****
   .get('/register', (req, res) => {
-    if (!loggedAsEmail) {
+    if (loggedAsEmail) {
       res.status(403).send('You are already logged in.  Please log out to register a new email!');
       return;
     }
@@ -60,6 +60,9 @@ app
   .post('/register', (req, res) => {
     if (!req.body.email) {
       res.status(400).send('The email field may not be empty.');
+      return;
+    } else if (!req.body.password) {
+      res.status(400).send('The password field may not be empty.');
       return;
     }
 
@@ -89,7 +92,7 @@ app
 // LOG IN
 // ***** ***** ***** ***** *****
   .get('/login', (req, res) => {
-    if (!loggedAsEmail) {
+    if (loggedAsEmail) {
       res.status(403).send('You are already logged in.  Please log out to log in!');
       return;
     }
