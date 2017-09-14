@@ -43,7 +43,7 @@ app
 
   .use(cookieSession({
     name: 'session',
-    keys: 'this_is_my_key'
+    keys: ['this_is_my_key']
   }))
 
 // REGISTER
@@ -77,6 +77,8 @@ app
       urlDatabase[newUserID] = {};
 
       req.session.userID = newUserID;
+      console.log (req.session.userID);
+      console.log(req.session);
       res.redirect('/urls');
     }
   })
