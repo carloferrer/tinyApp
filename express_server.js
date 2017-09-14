@@ -216,12 +216,7 @@ app
       uniqueURLs[req.params.id] = req.body.inputURL;
     }
 
-    templateVars = {
-      urls: uniqueURLs,
-      loggedAsEmail: loggedAsEmail
-    };
-
-    res.render('urls_index', templateVars);
+    res.redirect('/urls');
   })
 
 // DELETE A URL
@@ -239,12 +234,7 @@ app
 
     delete uniqueURLs[req.params.id];
 
-    templateVars = {
-      urls: uniqueURLs,
-      loggedAsEmail: loggedAsEmail
-    };
-
-    res.render('urls_index', templateVars);
+    res.redirect('/urls');
   })
 
 // LOAD INDEX PAGE
