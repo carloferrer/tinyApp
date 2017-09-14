@@ -91,9 +91,6 @@ app
     res.redirect('/urls');
   })
 
-// ***** ***** ***** ***** *****
-
-
 // LOG IN
 // ***** ***** ***** ***** *****
   .get('/login', (req, res) => {
@@ -127,7 +124,6 @@ app
 
     res.status(403).send('Email not found; please check the spelling of the email address input.  Otherwise, register with TinyApp!');
   })
-// ***** ***** ***** ***** *****
 
 // LOGOUT
 // ***** ***** ***** ***** *****
@@ -136,7 +132,6 @@ app
     loggedAsEmail = ''; // Clears global 'current user' placeholder.
     res.redirect('/urls');
   })
-// ***** ***** ***** ***** *****
 
 // REDIRECT FROM SHORT URL TO LONG URL
 // ***** ***** ***** ***** *****
@@ -154,7 +149,6 @@ app
 
     res.status(404).send('There is no URL associated with this shortURL!');
   })
-// ***** ***** ***** ***** *****
 
 // GENERATE NEW SHORTURLS!
 // ***** ***** ***** ***** *****
@@ -176,7 +170,6 @@ app
     uniqueURLs[generateRandomString()] = req.body.longURL;
     res.redirect('/urls');
   })
-// ***** ***** ***** ***** *****
 
 // EDIT A SHORT URL
 // ***** ***** ***** ***** *****
@@ -224,7 +217,6 @@ app
 
     res.render('urls_index', templateVars);
   })
-// ***** ***** ***** ***** *****
 
 // DELETE A URL
 // ***** ***** ***** ***** *****
@@ -248,7 +240,6 @@ app
 
     res.render('urls_index', templateVars);
   })
-// ***** ***** ***** ***** *****
 
 // LOAD INDEX PAGE
 // ***** ***** ***** ***** *****
