@@ -11,12 +11,12 @@ const users = {
   "a": {
     id: "ADMINISTRATOR",
     email: "a@a",
-    password: "a"
+    password: bcrypt.hashSync('a', 10)
   },
   "b": {
     id: "ADMINISTRATOR-2",
     email: "b@b",
-    password: "b"
+    password: bcrypt.hashSync('b', 10)
   }
 
 };
@@ -33,7 +33,7 @@ let urlDatabase = {
 };
 
 let templateVars = {};
-let loggedAs = '';
+let loggedAsEmail = '';
 let uniqueURLs ={};
 
 app
@@ -76,9 +76,9 @@ app
 
       urlDatabase[newUserID] = {};
 
-      req.session.userID = newUserID;
-      console.log (req.session.userID);
-      console.log(req.session);
+      // req.session.userID = newUserID;
+      // console.log (req.session.userID);
+      // console.log(req.session);
       res.redirect('/urls');
     }
   })
@@ -86,7 +86,7 @@ app
   .get('/register', (req, res) => {
     templateVars = {
       // users: users,
-      loggedAs: loggedAs
+      loggedAsEmail: loggedAsEmail
     };
     res.render('urls_register', templateVars);
   })
@@ -102,19 +102,19 @@ app
     for (let currentUser in users) {
       if (users[currentUser]['email'] === req.body.email) {
         emailFound = true;
-        // if (users[currentUser]['password'] === req.body.password) {
+
         if (bcrypt.compareSync(req.body.password, users[currentUser]['password'])) {
+
           proceed = true;
-          console.log("You've logged in as: ", users[currentUser]['id']);
-          // loggedAs = users[currentUser]['id'];
+          console.log("You've logged in as: ", users[currentUser]['email']);
 
-          // uniqueURLs = urlDatabase[loggedAs];
+          // res.cookie('userID', users[currentUser]['id']);
+          req.session.userID = users[currentUser]['id'];
+          // res.cookie('userID', req.session.userID);
+          loggedAsEmail = users[currentUser]['email'];
 
-          res.cookie('userID', users[currentUser]['id']);
-          loggedAs = users[currentUser]['id'];
+          uniqueURLs = urlDatabase[users[currentUser]['id']];
 
-          uniqueURLs = urlDatabase[loggedAs];
-          // console.log(req.cookies);
         } else {
           res.status(403).send('Password incorrect.');
         }
@@ -136,7 +136,7 @@ app
     templateVars = {
       urls: uniqueURLs,
       // users: users,
-      loggedAs: loggedAs
+      loggedAsEmail: loggedAsEmail
     };
 
     res.render('urls_login', templateVars);
@@ -150,7 +150,7 @@ app
     req.session = null; // destroys session and clears cookies
 
     console.log('Logged out. Cookie cleared. ');
-    loggedAs = '';
+    loggedAsEmail = '';
     res.redirect('/urls');
   })
 // ***** ***** ***** ***** *****
@@ -186,7 +186,7 @@ app
     templateVars = {
       urls: uniqueURLs,
       shortURL: req.params.id,
-      loggedAs: loggedAs
+      loggedAsEmail: loggedAsEmail
     };
 
     console.log('Attempting to update ' + templateVars['shortURL']);
@@ -206,7 +206,7 @@ app
     templateVars = {
       urls: uniqueURLs,
       // users: users,
-      loggedAs: loggedAs
+      loggedAsEmail: loggedAsEmail
     };
 
     res.render('urls_index', templateVars);
@@ -227,7 +227,7 @@ app
     templateVars = {
       urls: uniqueURLs,
       // users: users,
-      loggedAs: loggedAs
+      loggedAsEmail: loggedAsEmail
     };
 
     if (proceed) {
@@ -240,7 +240,7 @@ app
     templateVars = {
       urls: uniqueURLs,
       // users: users,
-      loggedAs: loggedAs
+      loggedAsEmail: loggedAsEmail
     };
     res.render('urls_new', templateVars);
   })
@@ -251,7 +251,7 @@ app
     templateVars = {
       urls: uniqueURLs,
       // users: users,
-      loggedAs: loggedAs
+      loggedAsEmail: loggedAsEmail
     };
     res.render('urls_index', templateVars);
   })
@@ -269,7 +269,7 @@ app
       urls: uniqueURLs,
       shortURL: req.params.id,
       // users: users,
-      loggedAs: loggedAs
+      loggedAsEmail: loggedAsEmail
     };
     if (proceed) {
       res.render('urls_show', templateVars);
@@ -283,7 +283,7 @@ app
     templateVars = {
       urls: uniqueURLs,
       // users: users,
-      loggedAs: loggedAs
+      loggedAsEmail: loggedAsEmail
     };
     res.render('urls_index', templateVars);
     // console.log(req.body); // debug statement to see POST parameters

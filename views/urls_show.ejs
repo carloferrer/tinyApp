@@ -8,7 +8,7 @@
     <% include ../partials/_header %>
   </header>
 
-  <% if(loggedAs) { %>
+  <% if(loggedAsEmail) { %>
   <form method="POST" action=<%= '/urls/' + shortURL + '/update'%>>
     ShortURL: <%= shortURL%>
     <br>
