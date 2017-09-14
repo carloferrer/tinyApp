@@ -76,16 +76,12 @@ app
 
       urlDatabase[newUserID] = {};
 
-      // req.session.userID = newUserID;
-      // console.log (req.session.userID);
-      // console.log(req.session);
       res.redirect('/urls');
     }
   })
 
   .get('/register', (req, res) => {
     templateVars = {
-      // users: users,
       loggedAsEmail: loggedAsEmail
     };
     res.render('urls_register', templateVars);
@@ -108,11 +104,8 @@ app
           proceed = true;
           console.log("You've logged in as: ", users[currentUser]['email']);
 
-          // res.cookie('userID', users[currentUser]['id']);
           req.session.userID = users[currentUser]['id'];
-          // res.cookie('userID', req.session.userID);
           loggedAsEmail = users[currentUser]['email'];
-
           uniqueURLs = urlDatabase[users[currentUser]['id']];
 
         } else {
@@ -127,7 +120,6 @@ app
 
     if (proceed) {
       res.redirect('/urls');
-      // res.send('You logged in!');
     }
 
   })
@@ -135,7 +127,6 @@ app
   .get('/login', (req, res) => {
     templateVars = {
       urls: uniqueURLs,
-      // users: users,
       loggedAsEmail: loggedAsEmail
     };
 
@@ -146,7 +137,6 @@ app
 // LOGOUT
 // ***** ***** ***** ***** *****
   .post('/logout', (req, res) => {
-    // res.clearCookie('userID');
     req.session = null; // destroys session and clears cookies
 
     console.log('Logged out. Cookie cleared. ');
@@ -167,7 +157,7 @@ app
         }
       }
     }
-    console.log(longURL);
+
     res.redirect(longURL);
   })
 // ***** ***** ***** ***** *****
@@ -176,7 +166,6 @@ app
 // ***** ***** ***** ***** *****
   .get('/urls/:id/update', (req, res) => {
     let proceed = true;
-    // authenticate();
 
     if (!uniqueURLs[req.params.id]) {
       proceed = false;
@@ -205,7 +194,6 @@ app
 
     templateVars = {
       urls: uniqueURLs,
-      // users: users,
       loggedAsEmail: loggedAsEmail
     };
 
@@ -226,7 +214,6 @@ app
     delete uniqueURLs[req.params.id];
     templateVars = {
       urls: uniqueURLs,
-      // users: users,
       loggedAsEmail: loggedAsEmail
     };
 
@@ -239,7 +226,6 @@ app
   .get('/urls/new', (req, res) => {
     templateVars = {
       urls: uniqueURLs,
-      // users: users,
       loggedAsEmail: loggedAsEmail
     };
     res.render('urls_new', templateVars);
@@ -250,10 +236,13 @@ app
   .get('/urls', (req, res) => {
     templateVars = {
       urls: uniqueURLs,
-      // users: users,
       loggedAsEmail: loggedAsEmail
     };
     res.render('urls_index', templateVars);
+  })
+
+  .get('/', (req, res) => {
+    res.redirect('/urls');
   })
 // ***** ***** ***** ***** *****
 
