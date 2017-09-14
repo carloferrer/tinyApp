@@ -4,6 +4,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
+const methodOverride = require('method-override');
+const morgan = require('morgan');
 
 const PORT = process.env.PORT || 8080;
 
@@ -47,6 +49,10 @@ app
     name: 'session',
     keys: ['this_is_my_key']
   }))
+
+  .use(methodOverride('_method'))
+
+  .use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
 // REGISTER
 // ***** ***** ***** ***** *****
@@ -197,7 +203,7 @@ app
       res.redirect(`/urls/${req.params.id}/update`);
   })
 
-  .post('/urls/:id/update', (req, res) => {
+  .put('/urls/:id/update', (req, res) => {
     // If not logged in, one cannot edit a shortURL.
     // Pre-existing shortURLs may not be edited by anyone except the user that created it.
     if (!loggedAsEmail) {
@@ -222,7 +228,7 @@ app
 // ***** ***** ***** ***** *****
   // If not logged in, one cannot delete a shortURL.
   // Pre-existing shortURLs may not be deleted by anyone except the user that created it.
-  .post('/urls/:id/delete', (req, res) => {
+  .delete('/urls/:id/delete', (req, res) => {
     if (!loggedAsEmail) {
       res.status(403).send('You must be logged in to delete shortURLs!');
       return;
@@ -255,7 +261,7 @@ app
     res.redirect('/urls');
   })
 
-//
+// ***** ***** ***** ***** *****
 // ***** ***** ***** ***** *****
   .set('view engine', 'ejs')
 

@@ -25,7 +25,7 @@
             <form method='GET' action=<%= '/urls/' + url + '/update'%>>
               <input type='submit' value='EDIT' align='right'/>
             </form>
-            <form method='POST' action=<%= '/urls/' + url + '/delete'%>>
+            <form method='POST' action=<%= '/urls/' + url + '/delete?_method=DELETE'%>>
               <input type='submit' value='DELETE' align='right'/>
             </form>
         </li>

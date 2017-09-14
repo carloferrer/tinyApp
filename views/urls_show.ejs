@@ -9,7 +9,7 @@
   </header>
 
   <% if(loggedAsEmail) { %>
-  <form method="POST" action=<%= '/urls/' + shortURL + '/update'%>>
+  <form method="POST" action=<%= '/urls/' + shortURL + '/update?_method=PUT'%>>
     <br>
     Change the URL that [<%= shortURL%>] leads to:
     <br>
