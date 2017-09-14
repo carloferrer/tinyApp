@@ -81,7 +81,6 @@ app
         'password': bcrypt.hashSync(req.body.password, 10)
       };
 
-      console.log(users[newUserID]['password']);
       urlDatabase[newUserID] = {};
 
       res.cookie('userID', newUserID);
@@ -123,7 +122,6 @@ app
           console.log(req.cookies);
         } else {
           res.status(403).send('Password incorrect.');
-          console.log(bcrypt.compareSync(req.body.password, users[currentUser]['password']));
         }
       }
     }
