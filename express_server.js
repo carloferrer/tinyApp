@@ -88,15 +88,12 @@ app
   })
 
   .post('/login', (req, res) => {
-    let emailFound = false;
-
     for (let currentUser in users) {
+
       if (users[currentUser]['email'] === req.body.email) {
-        emailFound = true;
 
         if (bcrypt.compareSync(req.body.password, users[currentUser]['password'])) {
 
-          proceed = true;
           console.log("You've logged in as: ", users[currentUser]['email']);
 
           req.session.userID = users[currentUser]['id']; // Generate cookie.
@@ -105,15 +102,18 @@ app
 
           res.redirect('/urls');
           return;
+
         } else {
+
           res.status(403).send('Password is incorrect.');
           return;
+
         }
-      } else {
-        res.status(403).send('Email not found; please check the spelling of the email address input.  Otherwise, register with TinyApp!');
-        return;
       }
     }
+
+    res.status(403).send('Email not found; please check the spelling of the email address input.  Otherwise, register with TinyApp!');
+    return;
   })
 // ***** ***** ***** ***** *****
 

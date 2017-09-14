@@ -11,10 +11,13 @@
 <% if(loggedAsEmail) { %>
   <br>
   <form method='GET' action='/urls/new'>
-    <input type='submit' value='CLICK TO GENERATE SHORT URL'>
+    <input type='submit' value='GENERATE SHORT URL'>
   </form>
 
-  <h2>Pre-existing Links w/ ShortURLs</h2>
+  <% if(!urls) {%>
+  <h2>Go make some shortURLs!</h2>
+  <% } else { %>
+  <h2>Your shortURLs:</h2>
   <ul>
     <% for (var url in urls) { %>
       <li>
@@ -29,6 +32,8 @@
       <br>
     <% } %>
   </ul>
+  <% } %>
+
 <% } %>
 </body>
 </html>
