@@ -100,6 +100,7 @@ app
           loggedAsEmail = users[currentUser]['email']; // Remember who's logged in.
           uniqueURLs = urlDatabase[users[currentUser]['id']]; // Only let this user see the URLs the user owns.
 
+          console.log(uniqueURLs);
           res.redirect('/urls');
           return;
 
@@ -148,14 +149,12 @@ app
 // UPDATE A SHORT URL
 // ***** ***** ***** ***** *****
   .get('/urls/:id/update', (req, res) => {
-    let proceed = true;
-
     if (!loggedAsEmail) {
-      proceed = false;
       res.status(403).send('You must be logged in to edit shortURLs!');
+      return;
     } else if (!uniqueURLs[req.params.id]) {
-      proceed = false;
       res.status(403).send('You cannot edit shortURLs that you do not own!');
+      return;
     }
 
     templateVars = {
@@ -164,19 +163,17 @@ app
       loggedAsEmail: loggedAsEmail
     };
 
-    console.log('Attempting to update ' + templateVars['shortURL']);
-    if (proceed) {
-      res.render('urls_show', templateVars);
-    }
+    console.log('Attempting to update: ' + templateVars['shortURL']);
+    res.render('urls_show', templateVars);
   })
 
   .post('/urls/:id/update', (req, res) => {
     if (!loggedAsEmail) {
-      proceed = false;
       res.status(403).send('You must be logged in to edit shortURLs!');
+      return;
     } else if (!uniqueURLs[req.params.id]) {
-      proceed = false;
       res.status(403).send('You cannot edit shortURLs that you do not own!');
+      return;
     } else {
       uniqueURLs[req.params.id] = req.body.inputURL;
     }
@@ -193,25 +190,27 @@ app
 // DELETE A URL
 // ***** ***** ***** ***** *****
   .post('/urls/:id/delete', (req, res) => {
-    let proceed = true;
-
-    if (!uniqueURLs[req.params.id]) {
-      res.status(403).send('You cannot delete a shortURL that: \n1. you do not own, or \n2.does not exist.');
-      proceed = false;
+    if (!loggedAsEmail) {
+      res.status(403).send('You must be logged in to delete shortURLs!');
+      return;
+    } else if (!uniqueURLs[req.params.id]) {
+      res.status(403).send('You cannot delete shortURLs that you do not own!');
+      return;
     }
 
     delete uniqueURLs[req.params.id];
+
     templateVars = {
       urls: uniqueURLs,
       loggedAsEmail: loggedAsEmail
     };
 
-    if (proceed) {
-      res.render('urls_index', templateVars);
-    }
+    res.render('urls_index', templateVars);
   })
 // ***** ***** ***** ***** *****
 
+// GENERATE NEW SHORTURLS!
+// ***** ***** ***** ***** *****
   .get('/urls/new', (req, res) => {
     templateVars = {
       urls: uniqueURLs,
@@ -219,6 +218,12 @@ app
     };
     res.render('urls_new', templateVars);
   })
+
+  .post('/urls', (req, res) => {
+    uniqueURLs[generateRandomString()] = req.body.longURL;
+    res.redirect('/urls');
+  })
+// ***** ***** ***** ***** *****
 
 // LOAD INDEX PAGE
 // ***** ***** ***** ***** *****
@@ -233,40 +238,32 @@ app
   .get('/', (req, res) => {
     res.redirect('/urls');
   })
+
 // ***** ***** ***** ***** *****
-
   .get('/urls/:id', (req, res) => {
-    let proceed = true;
-
-    if (!uniqueURLs[req.params.id]) {
-      res.status(403).send('You cannot update a shortURL that: \n1. you do not own, or \n2.does not exist.');
-      proceed = false;
+    if (!loggedAsEmail) {
+      res.status(403).send('You must be logged in to edit shortURLs!');
+      return;
+    } else if (!uniqueURLs[req.params.id]) {
+      res.status(403).send('You cannot edit shortURLs that you do not own!');
+      return;
     }
 
     templateVars = {
       urls: uniqueURLs,
       shortURL: req.params.id,
-      // users: users,
       loggedAsEmail: loggedAsEmail
     };
-    if (proceed) {
-      res.render('urls_show', templateVars);
-    }
+
+    res.render('urls_show', templateVars);
   })
 
 // ***** ***** ***** ***** *****
-  .post('/urls', (req, res) => {
-    uniqueURLs[generateRandomString()] = req.body.longURL;
-
-    res.redirect('/urls');
-  })
-
   .set('view engine', 'ejs')
 
   .listen(PORT, () => {
     console.log(`Example app listening on port ${PORT}!`);
   });
-// ***** ***** ***** ***** *****
 
 // RANDOM ID GENERATOR
 // ***** ***** ***** ***** *****
@@ -279,4 +276,3 @@ function generateRandomString() {
   }
   return text;
 }
-// ***** ***** ***** ***** *****

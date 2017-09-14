@@ -3,8 +3,9 @@
 <head>
   <title>TinyApp</title>
 </head>
-<body style="font-size:20px; padding:50px;">
+<body style="font-size:16px; padding:30px;">
   <% if(!loggedAsEmail) { %>
+  <h1>Logging into TinyApp...</h1>
     <form method='POST' action='/login'>
         Your email:
         <input type='email' name='email'/>

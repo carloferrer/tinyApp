@@ -3,7 +3,7 @@
 <head>
   <title>TinyApp</title>
 </head>
-<body style="font-size:20px; padding:50px;">
+<body style="font-size:16px; padding:30px;">
   <header>
     <% include ../partials/_header %>
   </header>
@@ -11,9 +11,9 @@
   <% if(loggedAsEmail) { %>
   <form method="POST" action=<%= '/urls/' + shortURL + '/update'%>>
     <br>
-    Input a full URL to change where [<%= shortURL%>] leads.
+    Change the URL that [<%= shortURL%>] leads to:
     <br>
-      <input type='text' name='inputURL'/>
+      <input type='text' name='inputURL' placeholder="http://" style="width: 300px" />
       <input type='submit' value='UPDATE'/>
   </form>
   <% } else { %>

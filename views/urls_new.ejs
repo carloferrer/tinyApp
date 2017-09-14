@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head></head>
-  <body style="font-size:20px; padding:50px;">
+  <head>
+    <title>TinyApp</title>
+  </head>
+  <body style="font-size:16px; padding:30px;">
 
     <% include ../partials/_header %>
 
     <% if(loggedAsEmail) { %>
 
-    <form action="/urls" method="POST" style="margin:150px;">
-      <label for="longURL">Enter a URL:</label>
-      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px">
-      <input type="submit" value="Submit">
+    <br>
+    Enter a URL to generate a shortURL for:
+    <br>
+    <form action="/urls" method="POST">
+
+
+      <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px" />
+      <input type="submit" value="GENERATE" />
     </form>
 
   <% } else { %>
   <br>
-  You need to be logged in to generate short URLs for long URLs!
+  You need to be logged in to generate shortURLs!
 
   <% } %>
 

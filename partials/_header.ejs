@@ -1,19 +1,18 @@
 <% if(loggedAsEmail) { %>
-<h1>Logged into TinyApp as: <%= loggedAsEmail %></h1>
 
+<h1>Logged into TinyApp as: [ <%= loggedAsEmail %> ]</h1>
   <form method="POST" action="/logout">
-    <br>
     <input type='submit' value='LOGOUT' />
   </form>
 
 <% } else { %>
+
 <h1>Please login or register with TinyApp.</h1>
   <form method="GET" action="/login">
     <input type='submit' value='LOGIN' />
   </form>
-
+<br>
   <form method="GET" action="/register">
-    <br>
     <input type='submit' value='REGISTER' />
   </form>
 
