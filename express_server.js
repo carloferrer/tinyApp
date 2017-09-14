@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 
 const PORT = process.env.PORT || 8080;
 
+// The users object is pre-populated for test purposes.
 const users = {
   "a": {
     id: "ADMINISTRATOR",
@@ -21,7 +22,8 @@ const users = {
 
 };
 
-let urlDatabase = {
+// The urlDatabase object is pre-populated for test purposes.
+const urlDatabase = {
   'ADMINISTRATOR' : {
     "b2xVn2": "http://www.lighthouselabs.ca",
     "9sm5xK": "http://www.google.com"
@@ -32,7 +34,7 @@ let urlDatabase = {
   }
 };
 
-let templateVars = {};
+let templateVars = {}; // This stores the variables to be passed to .ejs files.
 let loggedAsEmail = ''; // This stores the logged in user's email.
 let uniqueURLs ={}; // This object is populated with the URLs that belong to the user that is logged in.
 
@@ -58,6 +60,7 @@ app
   })
 
   .post('/register', (req, res) => {
+    // Text input fields may not be empty.
     if (!req.body.email) {
       res.status(400).send('The email field may not be empty.');
       return;
@@ -66,6 +69,7 @@ app
       return;
     }
 
+    // Emails that belong to pre-existing accounts may not be registered.
     for (let currentUser in users) {
       if (users[currentUser]['email'] === req.body.email) {
         res.status(400).send('This email already registered.');
@@ -73,6 +77,7 @@ app
       }
     }
 
+    // Commence registration of new user.
     let newUserID = generateRandomString();
 
     users[newUserID] = {
@@ -92,6 +97,7 @@ app
 // LOG IN
 // ***** ***** ***** ***** *****
   .get('/login', (req, res) => {
+    // Cannot login if already logged in.
     if (loggedAsEmail) {
       res.status(403).send('You are already logged in.  Please log out to log in!');
       return;
@@ -120,17 +126,14 @@ app
     }
 
     res.status(403).send('Email not found; please check the spelling of the email address input.  Otherwise, register with TinyApp!');
-    return;
   })
 // ***** ***** ***** ***** *****
 
 // LOGOUT
 // ***** ***** ***** ***** *****
   .post('/logout', (req, res) => {
-    req.session = null; // destroys session and clears cookies
-
-    console.log('Logged out. Cookie cleared.');
-    loggedAsEmail = '';
+    req.session = null; // Destroys session and clears cookies
+    loggedAsEmail = ''; // Clears global 'current user' placeholder.
     res.redirect('/urls');
   })
 // ***** ***** ***** ***** *****
@@ -153,9 +156,33 @@ app
   })
 // ***** ***** ***** ***** *****
 
-// UPDATE A SHORT URL
+// GENERATE NEW SHORTURLS!
+// ***** ***** ***** ***** *****
+  .get('/urls/new', (req, res) => {
+    templateVars = {
+      urls: uniqueURLs,
+      loggedAsEmail: loggedAsEmail
+    };
+    res.render('urls_new', templateVars);
+  })
+
+  .post('/urls', (req, res) => {
+    // If not logged in, one cannot generate a shortURL.
+     if (!loggedAsEmail) {
+      res.status(403).send('You must be logged in to generate shortURLs!');
+      return;
+    }
+
+    uniqueURLs[generateRandomString()] = req.body.longURL;
+    res.redirect('/urls');
+  })
+// ***** ***** ***** ***** *****
+
+// EDIT A SHORT URL
 // ***** ***** ***** ***** *****
   .get('/urls/:id/update', (req, res) => {
+    // If not logged in, one cannot edit a shortURL.
+    // Pre-existing shortURLs may not be edited by anyone except the user that created it.
     if (!loggedAsEmail) {
       res.status(403).send('You must be logged in to edit shortURLs!');
       return;
@@ -174,19 +201,12 @@ app
   })
 
   .get('/urls/:id', (req, res) => {
-    if (req.params.id === 'new') {
-      templateVars = {
-        urls: uniqueURLs,
-        loggedAsEmail: loggedAsEmail
-      };
-
-      res.render('urls_new', templateVars);
-    } else {
       res.redirect(`/urls/${req.params.id}/update`);
-    }
   })
 
   .post('/urls/:id/update', (req, res) => {
+    // If not logged in, one cannot edit a shortURL.
+    // Pre-existing shortURLs may not be edited by anyone except the user that created it.
     if (!loggedAsEmail) {
       res.status(403).send('You must be logged in to edit shortURLs!');
       return;
@@ -208,6 +228,8 @@ app
 
 // DELETE A URL
 // ***** ***** ***** ***** *****
+  // If not logged in, one cannot delete a shortURL.
+  // Pre-existing shortURLs may not be deleted by anyone except the user that created it.
   .post('/urls/:id/delete', (req, res) => {
     if (!loggedAsEmail) {
       res.status(403).send('You must be logged in to delete shortURLs!');
@@ -228,27 +250,6 @@ app
   })
 // ***** ***** ***** ***** *****
 
-// GENERATE NEW SHORTURLS!
-// ***** ***** ***** ***** *****
-  .get('/urls/new', (req, res) => {
-    templateVars = {
-      urls: uniqueURLs,
-      loggedAsEmail: loggedAsEmail
-    };
-    res.render('urls_new', templateVars);
-  })
-
-  .post('/urls', (req, res) => {
-     if (!loggedAsEmail) {
-      res.status(403).send('You must be logged in to generate shortURLs!');
-      return;
-    }
-
-    uniqueURLs[generateRandomString()] = req.body.longURL;
-    res.redirect('/urls');
-  })
-// ***** ***** ***** ***** *****
-
 // LOAD INDEX PAGE
 // ***** ***** ***** ***** *****
   .get('/urls', (req, res) => {
@@ -263,7 +264,7 @@ app
     res.redirect('/urls');
   })
 
-// APPEND
+//
 // ***** ***** ***** ***** *****
   .set('view engine', 'ejs')
 
