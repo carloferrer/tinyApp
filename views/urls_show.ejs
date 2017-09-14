@@ -10,7 +10,8 @@
 
   <% if(loggedAsEmail) { %>
   <form method="POST" action=<%= '/urls/' + shortURL + '/update'%>>
-    ShortURL: <%= shortURL%>
+    <br>
+    Input a full URL to change where [<%= shortURL%>] leads.
     <br>
       <input type='text' name='inputURL'/>
       <input type='submit' value='UPDATE'/>

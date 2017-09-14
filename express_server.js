@@ -33,8 +33,8 @@ let urlDatabase = {
 };
 
 let templateVars = {};
-let loggedAsEmail = '';
-let uniqueURLs ={};
+let loggedAsEmail = ''; // This stores the logged in user's email.
+let uniqueURLs ={}; // This object is populated with the URLs that belong to the user that is logged in.
 
 app
   .use(bodyParser.urlencoded( {
@@ -48,51 +48,42 @@ app
 
 // REGISTER
 // ***** ***** ***** ***** *****
-  .post('/register', (req, res) => {
-    let proceed = true;
+  .get('/register', (req, res) => {
+    res.render('urls_register');
+  })
 
+  .post('/register', (req, res) => {
     if (!req.body.email) {
-      res.status(400).send('Email field empty.');
-      console.log("Email field empty.");
-      proceed = false;
+      res.status(400).send('The email field may not be empty.');
+      return;
     }
 
     for (let currentUser in users) {
       if (users[currentUser]['email'] === req.body.email) {
-        res.status(400).send('Email already registered.');
-        console.log("Email already registered.");
-        proceed = false;
+        res.status(400).send('This email already registered.');
+        return;
       }
     }
 
-    if (proceed) {
-      let newUserID = generateRandomString();
+    let newUserID = generateRandomString();
 
-      users[newUserID] = {
-        'id': newUserID,
-        'email': req.body.email,
-        'password': bcrypt.hashSync(req.body.password, 10)
-      };
-
-      urlDatabase[newUserID] = {};
-
-      res.redirect('/urls');
-    }
-  })
-
-  .get('/register', (req, res) => {
-    templateVars = {
-      loggedAsEmail: loggedAsEmail
+    users[newUserID] = {
+      'id': newUserID,
+      'email': req.body.email,
+      'password': bcrypt.hashSync(req.body.password, 10)
     };
-    res.render('urls_register', templateVars);
+
+    urlDatabase[newUserID] = {}; // Initialize new object for newly registered user to store URLs
+
+    res.redirect('/urls');
   })
+
 // ***** ***** ***** ***** *****
 
 
 // LOG IN
 // ***** ***** ***** ***** *****
   .post('/login', (req, res) => {
-    let proceed = false;
     let emailFound = false;
 
     for (let currentUser in users) {
@@ -104,24 +95,21 @@ app
           proceed = true;
           console.log("You've logged in as: ", users[currentUser]['email']);
 
-          req.session.userID = users[currentUser]['id'];
-          loggedAsEmail = users[currentUser]['email'];
-          uniqueURLs = urlDatabase[users[currentUser]['id']];
+          req.session.userID = users[currentUser]['id']; // Generate cookie.
+          loggedAsEmail = users[currentUser]['email']; // Remember who's logged in.
+          uniqueURLs = urlDatabase[users[currentUser]['id']]; // Only let this user see the URLs the user owns.
 
+          res.redirect('/urls');
+          return;
         } else {
-          res.status(403).send('Password incorrect.');
+          res.status(403).send('Password is incorrect.');
+          return;
         }
+      } else {
+        res.status(403).send('Email not found; please check the spelling of the email address input.  Otherwise, register with TinyApp!');
+        return;
       }
     }
-
-    if (!emailFound) {
-      res.status(403).send('Email not found');
-    }
-
-    if (proceed) {
-      res.redirect('/urls');
-    }
-
   })
 
   .get('/login', (req, res) => {
@@ -167,9 +155,12 @@ app
   .get('/urls/:id/update', (req, res) => {
     let proceed = true;
 
-    if (!uniqueURLs[req.params.id]) {
+    if (!loggedAsEmail) {
       proceed = false;
-      res.status(403).send('You cannot update a shortURL that: \n1. you do not own, or \n2.does not exist.');
+      res.status(403).send('You must be logged in to edit shortURLs!');
+    } else if (!uniqueURLs[req.params.id]) {
+      proceed = false;
+      res.status(403).send('You cannot edit shortURLs that you do not own!');
     }
 
     templateVars = {
@@ -185,9 +176,12 @@ app
   })
 
   .post('/urls/:id/update', (req, res) => {
-    authenticate();
-    if (!uniqueURLs[req.params.id]) {
-      res.status(403).send('You cannot update a shortURL that: \n1. you do not own, or \n2.does not exist.');
+    if (!loggedAsEmail) {
+      proceed = false;
+      res.status(403).send('You must be logged in to edit shortURLs!');
+    } else if (!uniqueURLs[req.params.id]) {
+      proceed = false;
+      res.status(403).send('You cannot edit shortURLs that you do not own!');
     } else {
       uniqueURLs[req.params.id] = req.body.inputURL;
     }
@@ -269,14 +263,7 @@ app
   .post('/urls', (req, res) => {
     uniqueURLs[generateRandomString()] = req.body.longURL;
 
-    templateVars = {
-      urls: uniqueURLs,
-      // users: users,
-      loggedAsEmail: loggedAsEmail
-    };
-    res.render('urls_index', templateVars);
-    // console.log(req.body); // debug statement to see POST parameters
-    // res.send('OK'); // respond w/ OK (to be replaced)
+    res.redirect('/urls');
   })
 
   .set('view engine', 'ejs')
@@ -285,16 +272,6 @@ app
     console.log(`Example app listening on port ${PORT}!`);
   });
 // ***** ***** ***** ***** *****
-
-function authenticate() {
-  // for (let uniqueUser in urlDatabase) {
-  //   for (let short in urlDatabase[uniqueUser]) {
-  //     if (loggedAs !== uniqueUser) {
-  //       res.status(403).send('You are not the owner of this shortURL.  You may only manipulate this shortURL if you are the owner.')
-  //     }
-  //   }
-  // }
-}
 
 // RANDOM ID GENERATOR
 // ***** ***** ***** ***** *****
