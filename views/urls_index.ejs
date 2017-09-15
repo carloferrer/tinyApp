@@ -9,17 +9,19 @@
   </header>
 
 <% if(loggedAsEmail) { %>
-  <br>
-  <form method='GET' action='/urls/new'>
-    <input type='submit' value='GENERATE SHORTURL'>
-  </form>
+
 
   <% if(Object.keys(urls).length === 0) {%>
-    <h2>You have no shortURLs!  Go generate some!</h2>
+
+    <h2>You have no shortURLs!</h2>
+
   <% } else { %>
+
     <h2>Your shortURLs:</h2>
     <ul>
+
       <% for (var url in urls) { %>
+
         <li>
           <%= url%> → <%= urls[url] %>
             <form method='GET' action=<%= '/urls/' + url + '/update'%>>
@@ -30,9 +32,19 @@
             </form>
         </li>
         <br>
+
       <% } %>
-    </ul>
+
   <% } %>
+
+    <form method='GET' action='/urls/new'>
+      <li>
+        <input type='submit' value='GENERATE NEW SHORTURL'>
+      </li>
+    </form>
+    </ul>
+
 <% } %>
+
 </body>
 </html>
