@@ -4,16 +4,16 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 ## Final Product
 
-TinyApp Index (While Logged Out)
+TinyApp Index (While Logged Out):
 !["Screenshot of Index (Logged Out)"](https://github.com/carloferrer/tinyApp/blob/master/tinyapp-index.png)
 
-TinyApp Index (While Logged In)
+TinyApp Index (While Logged In):
 !["Screenshot of Index (Logged In)"](https://github.com/carloferrer/tinyApp/blob/master/tinyapp-sample.png)
 
-TinyApp Generation of New ShortURL
+TinyApp Generation of New ShortURL:
 !["Screenshot of shortURL Generation"](https://github.com/carloferrer/tinyApp/blob/master/tinyapp-generate.png)
 
-TinyApp Index After New ShortURL Generation
+TinyApp Index After New ShortURL Generation:
 !["Screenshot of Post shortURL Generation"](https://github.com/carloferrer/tinyApp/blob/master/tinyapp-sample-2.png)
 
 ## Dependencies
