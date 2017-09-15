@@ -52,7 +52,7 @@ app
 
   .use(methodOverride('_method'))
 
-  .use(morgan('tiny'))
+  .use(morgan('dev'))
 
 // REGISTER
 // ***** ***** ***** ***** *****
@@ -149,6 +149,7 @@ app
         if (req.params.shortURL === short) {
           longURL = urlDatabase[uniqueUser][short];
           res.redirect(longURL);
+          return;
         }
       }
     }
