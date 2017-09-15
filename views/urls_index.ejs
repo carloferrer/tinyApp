@@ -18,31 +18,25 @@
   <% } else { %>
 
     <h2>Your shortURLs:</h2>
-    <ul>
 
-      <% for (var url in urls) { %>
+    <% for (var url in urls) { %>
 
-        <li>
-          <%= url%> → <%= urls[url] %>
-            <form method='GET' action=<%= '/urls/' + url + '/update'%>>
-              <input type='submit' value='EDIT' align='right'/>
-            </form>
-            <form method='POST' action=<%= '/urls/' + url + '/delete?_method=DELETE'%>>
-              <input type='submit' value='DELETE' align='right'/>
-            </form>
-        </li>
-        <br>
+      <%= url%> → <%= urls[url] %>
+        <form method='GET' action=<%= '/urls/' + url + '/update'%>>
+          <input type='submit' value='EDIT' align='right'/>
+        </form>
+        <form method='POST' action=<%= '/urls/' + url + '/delete?_method=DELETE'%>>
+          <input type='submit' value='DELETE' align='right'/>
+        </form>
+      <br>
 
-      <% } %>
+    <% } %>
 
   <% } %>
 
     <form method='GET' action='/urls/new'>
-      <li>
         <input type='submit' value='GENERATE NEW SHORTURL'>
-      </li>
     </form>
-    </ul>
 
 <% } %>
 

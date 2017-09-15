@@ -9,12 +9,9 @@
 
     <% if(loggedAsEmail) { %>
 
-    <br>
-    Enter a URL to generate a shortURL for:
-    <br>
+    <h2>Enter a URL to generate a shortURL for:</h2>
+
     <form action="/urls" method="POST">
-
-
       <input id="longURL" type="text" name="longURL" placeholder="http://" style="width: 300px" />
       <input type="submit" value="GENERATE" />
     </form>
