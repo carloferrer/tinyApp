@@ -13,12 +13,12 @@ const PORT = process.env.PORT || 8080;
 const users = {
   "a": {
     id: "ADMINISTRATOR",
-    email: "a@a",
+    email: "admin@email.com",
     password: bcrypt.hashSync('a', 10)
   },
   "b": {
     id: "ADMINISTRATOR-2",
-    email: "b@b",
+    email: "admin-2@email.com",
     password: bcrypt.hashSync('b', 10)
   }
 
